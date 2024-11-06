@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    printf("Введите строку: ");
+
+    char * str = (char *)malloc(1024 * sizeof(char));
+    if (str == NULL) {
+        printf("Ошибка выделения памяти.\n");
+        return 1;
+    }
+
+    fgets(str, 1024, stdin);
+
+    int letter_count[32] = {0};
+
+    for (int i = 0; str[i] != '\0'; i++) {
+        char ch = str[i];
+
+        if (ch >= 'А' && ch <= 'Я') {
+            ch = ch + ('а' - 'А');
+        }
+        if (ch >= 'а' && ch <= 'я') {
+            letter_count[ch - 'а']++;
+        }
+    }
+
+    printf("Количество одинаковых букв:\n");
+    for (int i = 0; i < 32; i++) {
+        if (letter_count[i] > 0) {
+            printf("%c: %d\n", 'а' + i, letter_count[i]);
+        }
+    }
+
+    free(str);
+
+    return 0;
+}
