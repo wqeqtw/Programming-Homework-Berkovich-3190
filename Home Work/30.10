@@ -1,72 +1,45 @@
 #include <stdio.h>
-#include <stdlib.h>
+#define MAX_SIZE 10
 
-#define N 3
-
-int invertMatrix(float matrix[N][N], float inverse[N][N]) {
-    int i, j, k;
-    float ratio;
-
-
-    for (i = 0; i < N; i++) {
-        for (j = 0; j < N; j++) {
-            inverse[i][j] = (i == j) ? 1.0 : 0.0;
+void transposeMatrix(int n, int m, int matrix[MAX_SIZE][MAX_SIZE], int result[MAX_SIZE][MAX_SIZE]) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            result[j][i] = matrix[i][j];
         }
-    }
-
-
-    for (i = 0; i < N; i++) {
-        if (matrix[i][i] == 0.0) {
-            printf("Матрица не является обратимой.\n");
-            return 0;
-        }
-        for (j = 0; j < N; j++) {
-            if (i != j) {
-                ratio = matrix[j][i] / matrix[i][i];
-                for (k = 0; k < N; k++) {
-                    matrix[j][k] -= ratio * matrix[i][k];
-                    inverse[j][k] -= ratio * inverse[i][k];
-                }
-            }
-        }
-    }
-
-
-    for (i = 0; i < N; i++) {
-        for (j = 0; j < N; j++) {
-            inverse[i][j] /= matrix[i][i];
-        }
-        matrix[i][i] = 1.0;
-    }
-    return 1;
-}
-
-void printMatrix(float matrix[N][N]) {
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            printf("%8.3f ", matrix[i][j]);
-        }
-        printf("\n");
     }
 }
 
 int main() {
-    float matrix[N][N] = {
-        {2, -1, 0},
-        {-1, 2, -1},
-        {0, -1, 2}
-    };
+    int n, m;
+    int matrix[MAX_SIZE][MAX_SIZE], transposed[MAX_SIZE][MAX_SIZE];
 
-    float inverse[N][N];
+    printf("Введите количество строк (n) и столбцов (m) матрицы: ");
+    scanf("%d %d", &n, &m);
 
-    printf("Исходная матрица:\n");
-    printMatrix(matrix);
+    printf("Введите элементы матрицы (%d x %d):\n", n, m);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            printf("Элемент [%d][%d]: ", i + 1, j + 1);
+            scanf("%d", &matrix[i][j]);
+        }
+    }
 
-    if (invertMatrix(matrix, inverse)) {
-        printf("\n Обратная матрица:\n");
-        printMatrix(inverse);
-    } else {
-        printf("\n Не удалось найти обратную матрицу.\n");
+    transposeMatrix(n, m, matrix, transposed);
+
+    printf("\nИсходная матрица:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("\nТранспонированная матрица:\n");
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%d ", transposed[i][j]);
+        }
+        printf("\n");
     }
 
     return 0;
