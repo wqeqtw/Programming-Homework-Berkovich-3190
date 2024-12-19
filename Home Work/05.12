@@ -3,6 +3,8 @@
 #include <string.h>
 #include <ctype.h>
 
+void perform_operation(const char* num1, const char* num2, char op, char* result);
+
 int main() {
     char num1[101], num2[101], operation;
     char result[101];
@@ -30,39 +32,50 @@ int main() {
 
 void perform_operation(const char* num1, const char* num2, char op, char* result) {
     int len = strlen(num1);
+
     for (int i = 0; i < len; i++) {
         if (!isdigit(num1[i]) || !isdigit(num2[i])) {
             printf("Ошибка: оба ввода должны быть числовыми строками одинаковой длины.\n");
+            result[0] = '\0';
             return;
         }
-        
+
         int digit1 = num1[i] - '0';
         int digit2 = num2[i] - '0';
         int result_value;
 
         switch (op) {
-            case '+':
-                result_value = digit1 + digit2;
-                break;
-            case '-':
-                result_value = digit1 - digit2;
-                break;
-            case '*':
-                result_value = digit1 * digit2;
-                break;
-            case '/':
-                if (digit2 == 0) {
-                    printf("Ошибка: деление на ноль в позиции %d.\n", i);
-                    return;
-                }
-                result_value = digit1 / digit2;
-                break;
-            default:
-                printf("Ошибка: неподдерживаемая операция '%c'.\n", op);
+        case '+':
+            result_value = digit1 + digit2;
+            break;
+        case '-':
+            result_value = digit1 - digit2;
+            break;
+        case '*':
+            result_value = digit1 * digit2;
+            break;
+        case '/':
+            if (digit2 == 0) {
+                printf("Ошибка: деление на ноль в позиции %d.\n", i);
+                result[0] = '\0';
                 return;
+            }
+            result_value = digit1 / digit2;
+            break;
+        default:
+            printf("Ошибка: неподдерживаемая операция '%c'.\n", op);
+            result[0] = '\0';
+            return;
         }
 
-        result[i] = (result_value >= 0 && result_value < 10) ? (result_value + '0') : 'X'; 
+        if (result_value >= 0 && result_value < 10) {
+            result[i] = result_value + '0';
+        } else {
+            printf("Ошибка: результат операции в позиции %d не может быть представлен одной цифрой.\n", i);
+            result[0] = '\0';
+            return;
+        }
     }
+
     result[len] = '\0';
-    }
+}
